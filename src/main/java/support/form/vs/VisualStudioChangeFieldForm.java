@@ -113,12 +113,20 @@ public class VisualStudioChangeFieldForm {
 
 	@JsonIgnore
 	public boolean wasChangeAssignation() {
-		return assignedTo != null && !assignedTo.getNewValue().equals(assignedTo.getOldValue()) && assignedTo.getOldValue() != null;
+		String newValue = getNewAssigned();
+		String oldValue = getOldAssigned();
+		
+		return assignedTo != null && newValue != null &&  oldValue != null && !newValue.equals(oldValue);
 	}
 
 	@JsonIgnore
 	public String getOldAssigned() {
 		return (assignedTo != null) ? assignedTo.getOldValue() : null;
+	}
+
+	@JsonIgnore
+	public String getNewAssigned() {
+		return (assignedTo != null) ? assignedTo.getNewValue() : null;
 	}
 	
 	@JsonIgnore

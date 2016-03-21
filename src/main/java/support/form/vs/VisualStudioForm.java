@@ -288,7 +288,8 @@ public class VisualStudioForm {
 	
 	@JsonIgnore	
 	public VisualStudioRevisionForm getParentFullObject(String account) throws Exception {
-		return VisualStudioUtil.getWorkItem(getParent().getRelationID(), account);
+		VisualStudioRelationsForm parent = getParent();
+		return (parent != null) ? VisualStudioUtil.getWorkItem(getParent().getRelationID(), account) : null;  
 	}
 	
 	@JsonIgnore	
