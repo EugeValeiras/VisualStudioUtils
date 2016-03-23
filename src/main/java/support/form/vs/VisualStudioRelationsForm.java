@@ -35,8 +35,8 @@ public class VisualStudioRelationsForm {
 	}
 	
 	@JsonIgnore
-	public String getEditURL(){
-		return "https://insynctive.visualstudio.com/DefaultCollection/Insynctive/_workitems/edit/"+getRelationID();
+	public String getEditURL(String account, String project){
+		return "https://"+account+".visualstudio.com/DefaultCollection/"+project+"/_workitems/edit/"+getRelationID();
 	}
 
 	@JsonIgnore

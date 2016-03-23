@@ -272,7 +272,6 @@ public class VisualStudioRevisionForm {
 		return find(vsUtil, (workItem) -> workItem.isDevelopFix(), account);
 	}
 	
-	
 	@JsonIgnore	
 	public VisualStudioRevisionForm findMergeToMasterTask(VisualStudioUtil vsUtil, String account) throws Exception {
 		return find(vsUtil, (workItem) -> workItem.isMergeToMasterBug(), account);
