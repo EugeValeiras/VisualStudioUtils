@@ -29,8 +29,9 @@ import support.utils.vs.VisualStudioWorkItemsForQuery;
 
 public class VisualStudioUtil {
 
+//	d5bb3o6xbmecnqgsa3vgequknbu3qyv7zf3shdbtijrwrpmhauwq
 	private static final String username = "evaleiras@insynctive.com";
-	private static final String password = "Benefits123";
+	private static final String password = "d5bb3o6xbmecnqgsa3vgequknbu3qyv7zf3shdbtijrwrpmhauwq";
 	
 	private static final String encoding = Base64.encodeBase64String((username+":"+password).getBytes());
 	private static final ObjectMapper mapper = new ObjectMapper();
