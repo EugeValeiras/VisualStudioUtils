@@ -29,14 +29,19 @@ import support.utils.vs.VisualStudioWorkItemsForQuery;
 
 public class VisualStudioUtil {
 
-//	d5bb3o6xbmecnqgsa3vgequknbu3qyv7zf3shdbtijrwrpmhauwq
-	private static final String username = "evaleiras@insynctive.com";
-	private static final String password = "d5bb3o6xbmecnqgsa3vgequknbu3qyv7zf3shdbtijrwrpmhauwq";
+	private final String username;
+	private final String password;
 	
-	private static final String encoding = Base64.encodeBase64String((username+":"+password).getBytes());
+	private final String encoding;
 	private static final ObjectMapper mapper = new ObjectMapper();
 	
-	public static VisualStudioRevisionForm getWorkItem(String id, String account) throws Exception{
+	public VisualStudioUtil(String username, String password) {
+		this.username = username;
+		this.password = password;
+		this.encoding = Base64.encodeBase64String((username+":"+password).getBytes());
+	}
+	
+	public VisualStudioRevisionForm getWorkItem(String id, String account) throws Exception{
 
 		HttpGet httpGet = new HttpGet(getWorkItemUrl(id, account));
 		httpGet.addHeader("Authorization", "Basic " + encoding);
@@ -51,7 +56,7 @@ public class VisualStudioUtil {
 		return ObjectResponse;
 	}
 	
-	public static Boolean createNewTask(VisualStudioWorkItem workItem, String project, String account) throws IOException, URISyntaxException{
+	public Boolean createNewTask(VisualStudioWorkItem workItem, String project, String account) throws IOException, URISyntaxException{
 		String urlString = getCreateWorkItemUrl(project, "Task", account);
 
 		JSONArray fields = getJsonFields(workItem);
@@ -59,7 +64,7 @@ public class VisualStudioUtil {
 		return sendPatch(urlString, fields) != null;
 	}
 	
-	public static Integer createNewBug(VisualStudioWorkItem workItem, String project, String account) throws IOException, URISyntaxException{
+	public Integer createNewBug(VisualStudioWorkItem workItem, String project, String account) throws IOException, URISyntaxException{
 		String urlString = getCreateWorkItemUrl(project, "Bug", account);
 
 		JSONArray fields = getJsonFields(workItem);
@@ -67,7 +72,7 @@ public class VisualStudioUtil {
 		return sendPatch(urlString, fields);
 	}
 
-	public static Boolean updateWorkItem(VisualStudioWorkItem workItem, String id, String project, String account) throws IOException, URISyntaxException{
+	public Boolean updateWorkItem(VisualStudioWorkItem workItem, String id, String project, String account) throws IOException, URISyntaxException{
 		String urlString = getModifiedWorkItemUrl(id, account);
 
 		JSONArray fields = getJsonFields(workItem); 
@@ -75,7 +80,7 @@ public class VisualStudioUtil {
 		return sendPatch(urlString, fields) != null;
 	}
 
-	private static Integer sendPatch(String urlString, JSONArray fields) throws IOException, ClientProtocolException, URISyntaxException {
+	private Integer sendPatch(String urlString, JSONArray fields) throws IOException, ClientProtocolException, URISyntaxException {
 		//Create Data JSON
 		StringEntity entity = new StringEntity(fields.toJSONString(), "UTF-8");
 		entity.setContentType("application/json");
@@ -105,7 +110,7 @@ public class VisualStudioUtil {
 		}
 	}
 
-	public static Integer countWorkInProgressCurrentIteration(String username, String project, String account) throws Exception{
+	public Integer countWorkInProgressCurrentIteration(String username, String project, String account) throws Exception{
 		
 		String postObject = "{\"query\": \"Select [System.Id]"+ 
 			" From WorkItems"+ 
@@ -145,7 +150,7 @@ public class VisualStudioUtil {
 		}
 	}
 	
-	public static String getCurrentIteration(String project, String account) throws ParseException, IOException {
+	public String getCurrentIteration(String project, String account) throws ParseException, IOException {
 		String encodeUri = UriUtils.encodeQuery(getCurrentIterationUrl(project, account), "UTF-8");
 		
 		HttpGet httpGet = new HttpGet(encodeUri);
@@ -162,7 +167,7 @@ public class VisualStudioUtil {
 		return iterationForm.getPath();
 	}
 	
-	private static JSONArray getJsonFields(VisualStudioWorkItem workItem) {
+	private JSONArray getJsonFields(VisualStudioWorkItem workItem) {
 		JSONArray fields = new JSONArray();
 		for(VisualStudioField field : workItem.getFields()){
 			fields.add(field.asJson());
@@ -173,39 +178,31 @@ public class VisualStudioUtil {
 		return fields;
 	}
 	
-	private static String getCurrentIterationUrl(String project, String account){
+	private String getCurrentIterationUrl(String project, String account){
 		return "https://"+account+".visualstudio.com/DefaultCollection/"+project+"/_apis/work/teamsettings/iterations?$timeframe=current&api-version=v2.0-preview";
 	}
 	
-	private static String getModifiedWorkItemUrl(String id, String account){
+	private String getModifiedWorkItemUrl(String id, String account){
 		return "https://"+account+".visualstudio.com/DefaultCollection/_apis/wit/workitems/"+id+"?api-version=1.0";
 	}
 	
-	private static String getCreateWorkItemUrl(String project, String type, String account){
+	private String getCreateWorkItemUrl(String project, String type, String account){
 		return "https://"+account+".visualstudio.com/DefaultCollection/"+(project)+"/_apis/wit/workitems/$"+type+"?api-version=1.0";
 	}
 	
-	private static String getWorkItemUrl(String id, String account){
+	private String getWorkItemUrl(String id, String account){
 		return "https://"+account+".visualstudio.com/DefaultCollection/_apis/wit/workitems/"+id+"?api-version=1.0&$expand=relations";
 	}
 	
-	public static String getVisualWorkItemUrl(String id, String project, String account) {
+	public String getVisualWorkItemUrl(String id, String project, String account) {
 		return "https://"+(account)+".visualstudio.com/DefaultCollection/"+(project)+"/_workitems?_a=edit&id="+id;
 	}
 	
-	public static String getVisualWorkItemUrlEncoded(String id, String project, String account) throws UnsupportedEncodingException {
+	public String getVisualWorkItemUrlEncoded(String id, String project, String account) throws UnsupportedEncodingException {
 		return UriUtils.encodeQuery("https://"+(account)+".visualstudio.com/DefaultCollection/"+(project)+"/_workitems?_a=edit&id="+id, "UTF-8");
 	}
 	
-	private static String getSendQueryUrl(String project, String account){
+	private String getSendQueryUrl(String project, String account){
 		return "https://"+(account)+".visualstudio.com/DefaultCollection/"+(project)+"/_apis/wit/wiql?api-version=1.0";
 	}
-	
-//	POST : {
-//	  "query": "Select [System.Id] 
-//				From WorkItems 
-//				Where ([System.AssignedTo] = 'Ignacio Fernandez' 
-			//		AND [System.State] = 'In Progress' 
-			//		AND [System.IterationPath] = @CurrentIteration)" 
-//	}
 }
