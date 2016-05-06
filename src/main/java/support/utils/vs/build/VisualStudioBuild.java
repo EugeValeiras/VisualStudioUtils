@@ -1,4 +1,4 @@
-package support.utils.vs.build;
+package support.utils.vs.master;
 
 public class VisualStudioBuild {
 

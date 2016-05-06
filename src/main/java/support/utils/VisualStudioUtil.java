@@ -1,4 +1,4 @@
-package support.utils;
+package support.utils.vs.master;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -26,8 +26,6 @@ import support.utils.vs.VisualStudioField;
 import support.utils.vs.VisualStudioRelation;
 import support.utils.vs.VisualStudioWorkItem;
 import support.utils.vs.VisualStudioWorkItemsForQuery;
-import support.utils.vs.build.VisualStudioBuild;
-import support.utils.vs.build.VisualStudioBuildDefinition;
 import support.utils.vs.builder.VisualStudioBuildBuilder;
 
 public class VisualStudioUtil {

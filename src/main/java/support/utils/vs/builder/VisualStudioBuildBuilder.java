@@ -1,7 +1,7 @@
 package support.utils.vs.builder;
 
-import support.utils.vs.build.VisualStudioBuild;
-import support.utils.vs.build.VisualStudioBuildDefinition;
+import support.utils.vs.master.VisualStudioBuild;
+import support.utils.vs.master.VisualStudioBuildDefinition;
 
 public class VisualStudioBuildBuilder {
 

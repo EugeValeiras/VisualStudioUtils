@@ -8,7 +8,7 @@ import support.utils.vs.VisualStudioWorkItem;
 
 public class VisualStudioWorkItemBuilder {
 
-	protected VisualStudioWorkItem item;
+	private VisualStudioWorkItem item;
 	
 	public VisualStudioWorkItemBuilder(){
 		item = new VisualStudioWorkItem();
@@ -103,6 +103,26 @@ public class VisualStudioWorkItemBuilder {
 		item.addVisualStudioField(new VisualStudioField("replace", "/fields/Microsoft.VSTS.Scheduling.RemainingWork", time));
 		return this;
 	}
+	
+	public VisualStudioWorkItemBuilder addIntercomConversation(String conversation) {
+		item.addVisualStudioField(new VisualStudioField("add", "/fields/insynctive.InsynctiveSCRUM.IntercomConversaton", conversation));
+		return this;
+	}
+	
+	public VisualStudioWorkItemBuilder modifiedIntercomConversation(String conversation) {
+		item.addVisualStudioField(new VisualStudioField("replace", "/fields/insynctive.InsynctiveSCRUM.IntercomConversaton", conversation));
+		return this;
+	}
+	
+	public VisualStudioWorkItemBuilder addIsIncident(Boolean isIncident) {
+		item.addVisualStudioField(new VisualStudioField("add", "/fields/insynctive.InsynctiveSCRUM.Incident", isIncident ? "YES" : "NO"));
+		return this;
+	}
+	
+	public VisualStudioWorkItemBuilder modifiedIsIncident(Boolean isIncident) {
+		item.addVisualStudioField(new VisualStudioField("replace", "/fields/insynctive.InsynctiveSCRUM.Incident", isIncident ? "YES" : "NO"));
+		return this;
+	}
 
 	public VisualStudioWorkItemBuilder addCreatedBy(String name) {
 		item.addVisualStudioField(new VisualStudioField("add", "/fields/System.CreatedBy", name));
@@ -136,5 +156,4 @@ public class VisualStudioWorkItemBuilder {
 	
 	public VisualStudioWorkItem build(){
 		return item;
-	}
-}
+	}}
