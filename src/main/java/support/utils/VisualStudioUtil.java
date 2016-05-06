@@ -26,6 +26,9 @@ import support.utils.vs.VisualStudioField;
 import support.utils.vs.VisualStudioRelation;
 import support.utils.vs.VisualStudioWorkItem;
 import support.utils.vs.VisualStudioWorkItemsForQuery;
+import support.utils.vs.build.VisualStudioBuild;
+import support.utils.vs.build.VisualStudioBuildDefinition;
+import support.utils.vs.builder.VisualStudioBuildBuilder;
 
 public class VisualStudioUtil {
 
@@ -150,6 +153,29 @@ public class VisualStudioUtil {
 		}
 	}
 	
+	public void queueABuild(VisualStudioBuild build, String project, String account) throws Exception{
+		StringEntity entity = new StringEntity(mapper.writeValueAsString(build), "UTF-8");
+		
+		String urlString = getRunBuildUrl(project, account);
+		String encodeUri = UriUtils.encodeQuery(urlString, "UTF-8");
+		
+		HttpPost httpPost = new HttpPost(encodeUri);
+		httpPost.addHeader("Content-Type", "application/json");
+		httpPost.addHeader("Authorization", "Basic " + encoding);
+		httpPost.setEntity(entity);
+		
+		CloseableHttpClient httpClient = HttpClients.createDefault();
+		HttpResponse response = httpClient.execute(httpPost);
+		
+		if(response.getStatusLine().getStatusCode() != 200){
+			System.out.println("URL: \n"+encodeUri);
+			System.out.println("Data: \n"+mapper.writeValueAsString(build));
+			
+			System.out.println("Status: \n"+response.getStatusLine().getStatusCode());
+			System.out.println("Response: \n"+response);
+		}
+	}
+	
 	public String getCurrentIteration(String project, String account) throws ParseException, IOException {
 		String encodeUri = UriUtils.encodeQuery(getCurrentIterationUrl(project, account), "UTF-8");
 		
@@ -176,6 +202,10 @@ public class VisualStudioUtil {
 			fields.add(relation.asJson());
 		}
 		return fields;
+	}
+	
+	private String getRunBuildUrl(String project, String account){
+		return "https://"+account+".visualstudio.com/DefaultCollection/"+project+"/_apis/build/builds?api-version=2.0";
 	}
 	
 	private String getCurrentIterationUrl(String project, String account){
